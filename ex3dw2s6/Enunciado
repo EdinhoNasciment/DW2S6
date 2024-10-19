@@ -1,0 +1,9 @@
+Escreva uma aplicação Web em Java de controle de ordens de serviço de uma assistência 
+técnica de informática, com Spring Boot, Spring Framework e Spring Data JPA, que:
+• Recebe uma requisição GET para obter uma lista de clientes, que é recuperada de um 
+banco de dados e enviada como resposta.
+• Recebe uma requisição POST com os dados de um novo cliente e persiste no banco de 
+dados.
+• Recebe uma requisição GET, com um código de cliente, e usando o código enviado 
+recupera os dados do cliente e envia como resposta. 
+* Cada cliente possui código, nome, e-mail e telefone.
