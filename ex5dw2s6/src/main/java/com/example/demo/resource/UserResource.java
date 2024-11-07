@@ -65,10 +65,4 @@ public class UserResource {
 		return ResponseEntity.notFound().build();
 	}
 
-	@PutMapping("/{id}/active")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizarPropriedadeAtivo(@PathVariable Long id, @RequestBody Boolean active) {
-		userService.updateActiveProperty(id, active);
-	}
-
 }

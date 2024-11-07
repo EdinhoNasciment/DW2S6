@@ -1,8 +1,9 @@
 package com.example.demo.exceptionhandler;
 
-import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -27,15 +28,6 @@ public class DemoExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private MessageSource messageSource;
 
-	@Override
-	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
-			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-		String userMessage = messageSource.getMessage("invalid.message", null, LocaleContextHolder.getLocale());
-		String developerMessage = ex.getCause().toString();
-
-		return handleExceptionInternal(ex, new Error(userMessage, developerMessage), headers, HttpStatus.BAD_REQUEST,
-				request);
-	}
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
@@ -64,6 +56,18 @@ public class DemoExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 		return errors;
 	}
+	@ExceptionHandler({ EmptyResultDataAccessException.class })
+	protected ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex,
+			WebRequest request) {
+		String userMessage = messageSource.getMessage("invalid.message", null, LocaleContextHolder.getLocale());
+
+		//String userMessage = messageSource.getMessage("resource.not-found", null, LocaleContextHolder.getLocale());
+		String developerMessage = ex.toString();
+
+		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
+		return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
 
 	public static class Error {
 		private String userMessage;
@@ -80,16 +84,6 @@ public class DemoExceptionHandler extends ResponseEntityExceptionHandler {
 
 		public String getDeveloperMessage() {
 			return developerMessage;
-		}
-
-		@ExceptionHandler({ EmptyResultDataAccessException.class })
-		protected ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex,
-				WebRequest request) {
-			String userMessage = messageSource.getMessage("resource.not-found", null, LocaleContextHolder.getLocale());
-			String developerMessage = ex.toString();
-
-			List<Error> errors = Array.asList(new Error(userMessage, developerMessage));
-			return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 		}
 
 	}
